@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require_relative "git-hook-util"
+
 ############################################
 
 def main
@@ -8,7 +10,7 @@ def main
   commit_msg_file = ARGV[0] # it will be .git/COMMIT_EDITMSG
   if commit_msg_empty?(commit_msg_file)
     branch_name = `git symbolic-ref --short HEAD`
-    pre_msg = gen_pre_msg(branch_name)
+    pre_msg = GitHookUtil.gen_pre_msg(branch_name)
     puts "pre-msg: #{pre_msg}"
     prepare_msg(commit_msg_file, pre_msg) unless pre_msg.empty?
   end
@@ -29,25 +31,26 @@ def commit_msg_empty?(commit_msg_file)
   true
 end
 
-BRANCH_NAME_REG = /^(feature|bug|hotfix|misc|refactor)\/(\d*)?(\w*)/
+# Moved to git-hook-util.rb to make it testable
+# BRANCH_NAME_REG = /^(feature|bug|hotfix|misc|refactor)\/(\d*)?(\w*)/
 
-# generate pre msg by branch name
-def gen_pre_msg(branch_name)
-  match_group = BRANCH_NAME_REG.match(branch_name)
-  if match_group
-    issue_type = match_group[1].upcase
-    issue_num = match_group[2]
-    issue_content = match_group[3]
+# # generate pre msg by branch name
+# def gen_pre_msg(branch_name)
+#   match_group = BRANCH_NAME_REG.match(branch_name)
+#   if match_group
+#     issue_type = match_group[1].upcase
+#     issue_num = match_group[2]
+#     issue_content = match_group[3]
 
-    issue_type = 'BUG' if issue_type == 'HOTFIX'
-    issue_num = " \##{issue_num}" unless issue_num.empty?
-    issue_content = issue_content.gsub(/_/, ' ').strip.capitalize
+#     issue_type = 'BUG' if issue_type == 'HOTFIX'
+#     issue_num = " \##{issue_num}" unless issue_num.empty?
+#     issue_content = issue_content.gsub(/_/, ' ').strip.capitalize
 
-    "#{issue_type}#{issue_num} - #{issue_content}"
-  else
-    ''
-  end
-end
+#     "#{issue_type}#{issue_num} - #{issue_content}"
+#   else
+#     ''
+#   end
+# end
 
 # write the pre msg in the begining of commit_msg_file
 def prepare_msg(commit_msg_file, pre_msg)

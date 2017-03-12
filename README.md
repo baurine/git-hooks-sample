@@ -8,6 +8,8 @@ Sample for git hooks: `pre-commit`, `prepare-commit-msg`, `commit-msg`, written 
 
 ## How to run
 
+Make sure you have installed ruby.
+
 Copy `git-hooks/*` to your git repo `.git/hooks` folder, add execute permission for them by `chmod u+x`.
 
 Then if you commit code in a branch its name follows `feature|bug|hotfix|misc|refactro/issue-num_content` format, it will automatically pre-fill your commit message, for example, if the branch name is `misc/123_fix_typo`, it will automatically pre-fill your commit message by `MISC #123 - Fix typo`.
@@ -16,7 +18,7 @@ Pre-filling commit message only works in command console, doesn't work in tools 
 
 And your commit message must follow the required format: `FEATURE|BUG|MISC|REFACOTR #num - Content`, else the commit will be rejected.
 
-You can modified the hooks according to your need.
+You can modified the hooks according to your need, supplied unit test to easily change rule.
 
 ## Demo
 

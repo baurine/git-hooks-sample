@@ -1,0 +1,64 @@
+#!/usr/bin/env ruby
+
+############################################
+
+def main
+  puts '---- prepare-commit-msg start ----'
+
+  commit_msg_file = ARGV[0] # it will be .git/COMMIT_EDITMSG
+  if commit_msg_empty?(commit_msg_file)
+    branch_name = `git symbolic-ref --short HEAD`
+    pre_msg = gen_pre_msg(branch_name)
+    puts "pre-msg: #{pre_msg}"
+    prepare_msg(commit_msg_file, pre_msg) unless pre_msg.empty?
+  end
+
+  puts '---- prepare-commit-msg end ------'
+end
+
+############################################
+
+# judge whether origin commit msg is empty
+def commit_msg_empty?(commit_msg_file)
+  File.open(commit_msg_file, 'r') do |f|
+    f.readlines.each do |line|
+      strip_line = line.strip
+      return false if (!strip_line.empty? && !strip_line.start_with?('#'))
+    end
+  end
+  true
+end
+
+BRANCH_NAME_REG = /^(feature|bug|hotfix|misc|refactor)\/(\d*)?(\w*)/
+
+# generate pre msg by branch name
+def gen_pre_msg(branch_name)
+  match_group = BRANCH_NAME_REG.match(branch_name)
+  if match_group
+    issue_type = match_group[1].upcase
+    issue_num = match_group[2]
+    issue_content = match_group[3]
+
+    issue_type = 'BUG' if issue_type == 'HOTFIX'
+    issue_num = " \##{issue_num}" unless issue_num.empty?
+    issue_content = issue_content.gsub(/_/, ' ').strip.capitalize
+
+    "#{issue_type}#{issue_num} - #{issue_content}"
+  else
+    ''
+  end
+end
+
+# write the pre msg in the begining of commit_msg_file
+def prepare_msg(commit_msg_file, pre_msg)
+  File.open(commit_msg_file, 'r+') do |f|
+    ori_content = f.read
+    f.seek(0, IO::SEEK_SET)
+    f.puts pre_msg
+    f.puts ori_content
+  end
+end
+
+############################################
+
+main

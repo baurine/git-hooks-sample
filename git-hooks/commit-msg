@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+
+############################################
+
+def main
+  puts '---- commit-msg start ----'
+
+  commit_msg_file = ARGV[0] # it will be .git/COMMIT_EDITMSG
+  commit_msg = get_commit_msg(commit_msg_file)
+  puts "commit-msg: #{commit_msg}"
+  unless expected_msg_format?(commit_msg)
+    puts "ERROR! commit failed, commit msg doesn't match the required format"
+    puts "expected msg format: FEAUTER|BUG|MISC|REFACTOR #num - Content"
+    exit 1
+  end
+
+  puts '---- commit-msg end ------'
+end
+
+############################################
+
+def get_commit_msg(commit_msg_file)
+  commit_msg = ''
+  File.open(commit_msg_file, 'r') do |f|
+    f.readlines.each do |line|
+      strip_line = line.strip
+      if !strip_line.empty? && !strip_line.start_with?('#')
+        commit_msg = line
+        break
+      end
+    end
+  end
+  commit_msg
+end
+
+MSG_FORMAT_REG = /^(FEATURE|BUG|MISC|REFACTOR)(\s#\d+)* - ([A-Z].*)/
+
+def expected_msg_format?(commit_msg)
+  commit_msg.start_with?('Merge branch') || MSG_FORMAT_REG.match(commit_msg)
+end
+
+############################################
+
+main

@@ -11,7 +11,7 @@ class GitHookUtil
 
       issue_type = 'BUG' if issue_type == 'HOTFIX'
       issue_num = " \##{issue_num}" unless issue_num.empty?
-      issue_content = issue_content.gsub(/_/, ' ').strip.capitalize
+      issue_content = issue_content.tr('_', ' ').strip.capitalize
 
       "#{issue_type}#{issue_num} - #{issue_content}"
     else

@@ -23,6 +23,28 @@ echo '---- pre-commit ----'
 echo 'run rubocop here for rails project'
 echo 'run checkstyle here for android project'
 
+# Sample for rubocop
+# SCRIPT_DIR=$(dirname "$0")
+# SCRIPT_ABS_PATH=`cd "$SCRIPT_DIR"; pwd` # .git/hooks
+# $SCRIPT_ABS_PATH/../../bin/bundle exec rubocop
+# if [ $? -eq 0 ]; then
+#     echo "Rubocop pass"
+# else
+#     echo "Rubocop failed"
+#     exit 1
+# fi
+
+# Sampel for checkstyle
+# SCRIPT_DIR=$(dirname "$0")
+# SCRIPT_ABS_PATH=`cd "$SCRIPT_DIR"; pwd`
+# $SCRIPT_ABS_PATH/../../gradlew checkstyle
+# if [ $? -eq 0 ]; then
+#     echo "checkstyle pass"
+# else
+#     echo "checkstyle failed"
+#     exit 1
+# fi
+
 # If you want to allow non-ASCII filenames set this variable to true.
 allownonascii=$(git config --bool hooks.allownonascii)
 

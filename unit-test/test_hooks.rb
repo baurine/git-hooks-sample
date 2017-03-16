@@ -1,4 +1,4 @@
-require_relative '../git-hooks/git-hook-util'
+require_relative '../git-hooks/git_hook_util'
 require 'test/unit'
 
 class TestGitHooks < Test::Unit::TestCase

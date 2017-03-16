@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require_relative "git-hook-util"
+require_relative "git_hook_util"
 
 ############################################
 
